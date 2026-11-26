@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JUST US ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, serif;
+    min-height: 100vh;
+    background: linear-gradient(145deg,#ffb6c9,#ed527d,#8e153e);
+    color: white;
+}
+
+.screen {
+    min-height: 100vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 75px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 40px;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+button {
+    border: none;
+    padding: 16px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: white;
+    color: #d62d62;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.secondary {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    width: 100%;
+    margin-top: 12px;
+}
+
+input {
+    width: 100%;
+    padding: 17px;
+    margin: 9px 0;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    font-size: 15px;
+    background: #fff;
+    color: #333;
+}
+
+.form-title {
+    font-size: 29px;
+    margin-bottom: 10px;
+}
+
+.form-description {
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.switch {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.switch span {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.footer {
+    margin-top: 35px;
+    font-size: 12px;
+    opacity: .8;
+}
+
+.heart {
+    animation: beat 1.5s infinite;
+}
+
+@keyframes beat {
+    50% { transform: scale(1.15); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME SCREEN -->
+
+<section id="welcome" class="screen active">
+<div class="card">
+
+<div class="logo heart">❤️</div>
+
+<h1>JUST US</h1>
+
+<p class="subtitle">
+Two hearts.<br>
+One private world.<br>
+A thousand beautiful memories.
+</p>
+
+<button class="primary" onclick="showScreen('login')">
+GET STARTED ❤️
+</button>
+
+<div class="footer">
+OUR LITTLE WORLD • EST. FOREVER
+</div>
+
+</div>
+</section>
+
+
+<!-- LOGIN SCREEN -->
+
+<section id="login" class="screen">
+<div class="card">
+
+<div class="logo">🌹</div>
+
+<h2 class="form-title">Welcome Back</h2>
+
+<p class="form-description">
+Your little world is waiting for you.
+</p>
+
+<form onsubmit="loginUser(event)">
+
+<input
+type="email"
+id="loginEmail"
+placeholder="Email address"
+required>
+
+<input
+type="password"
+id="loginPassword"
+placeholder="Password"
+required>
+
+<button class="primary" type="submit">
+LOGIN ❤️
+</button>
+
+</form>
+
+<div class="switch">
+New to JUST US?
+<span onclick="showScreen('register')">
+Create Account
+</span>
+</div>
+
+<button class="secondary" onclick="showScreen('welcome')">
+BACK
+</button>
+
+</div>
+</section>
+
+
+<!-- REGISTER SCREEN -->
+
+<section id="register" class="screen">
+<div class="card">
+
+<div class="logo">💌</div>
+
+<h2 class="form-title">Join Our World</h2>
+
+<p class="form-description">
+Create your private account.
+</p>
+
+<form onsubmit="registerUser(event)">
+
+<input
+type="text"
+id="fullName"
+placeholder="Your name"
+required>
+
+<input
+type="email"
+id="registerEmail"
+placeholder="Email address"
+required>
+
+<input
+type="password"
+id="registerPassword"
+placeholder="Create password"
+minlength="6"
+required>
+
+<button class="primary" type="submit">
+CREATE ACCOUNT ❤️
+</button>
+
+</form>
+
+<div class="switch">
+Already have an account?
+<span onclick="showScreen('login')">
+Login
+</span>
+</div>
+
+<button class="secondary" onclick="showScreen('welcome')">
+BACK
+</button>
+
+</div>
+</section>
+
+
+<script>
+
+function showScreen(screenId) {
+
+document.querySelectorAll('.screen').forEach(screen => {
+screen.classList.remove('active');
+});
+
+document.getElementById(screenId).classList.add('active');
+
+}
+
+function loginUser(event) {
+
+event.preventDefault();
+
+alert("Login interface is ready! Firebase authentication will be connected next.");
+
+}
+
+function registerUser(event) {
+
+event.preventDefault();
+
+alert("Registration interface is ready! Firebase registration will be connected next.");
+
+}
+
+</script>
+
+</body>
+  </html>

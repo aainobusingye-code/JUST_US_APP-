@@ -7,6 +7,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
 * {
@@ -17,33 +18,33 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #7b163b, #e84b78);
-    min-height: 100vh;
-    color: white;
+    background: #fff0f4;
+    color: #333;
 }
 
 .screen {
     display: none;
     min-height: 100vh;
-    padding: 25px;
-    align-items: center;
-    justify-content: center;
 }
 
 .screen.active {
     display: flex;
 }
 
+.center {
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
 .card {
+    background: white;
     width: 100%;
-    max-width: 390px;
-    padding: 35px 25px;
+    max-width: 400px;
+    padding: 30px 25px;
+    border-radius: 22px;
     text-align: center;
-    background: rgba(255,255,255,0.13);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 25px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,.1);
 }
 
 .logo {
@@ -52,163 +53,269 @@ body {
 }
 
 h1 {
-    font-size: 38px;
-    letter-spacing: 5px;
-    margin-bottom: 15px;
+    color: #c52d62;
+    font-size: 35px;
+    letter-spacing: 4px;
 }
 
 h2 {
-    font-size: 28px;
-    margin-bottom: 12px;
+    color: #c52d62;
+    margin-bottom: 15px;
 }
 
-.subtitle, .description {
-    line-height: 1.8;
-    margin-bottom: 25px;
+p {
+    line-height: 1.7;
+    margin: 15px 0;
 }
 
 input {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     margin: 9px 0;
-    border: none;
-    outline: none;
+    border: 1px solid #ddd;
     border-radius: 12px;
+    outline: none;
     font-size: 15px;
 }
 
 button {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
+    margin-top: 12px;
     border: none;
     border-radius: 12px;
-    margin-top: 13px;
-    font-size: 15px;
+    background: #c52d62;
+    color: white;
     font-weight: bold;
+    font-size: 15px;
     cursor: pointer;
 }
 
-.primary {
-    background: white;
-    color: #a21e50;
+button:disabled {
+    opacity: .6;
 }
 
 .secondary {
-    background: transparent;
-    color: white;
-    border: 1px solid white;
+    background: #ffe3ec;
+    color: #c52d62;
 }
 
 .switch {
-    margin-top: 22px;
+    margin-top: 20px;
     font-size: 14px;
 }
 
 .switch span {
+    color: #c52d62;
     text-decoration: underline;
-    font-weight: bold;
     cursor: pointer;
+    font-weight: bold;
 }
 
-.footer {
-    font-size: 11px;
-    margin-top: 30px;
-    opacity: .8;
-}
-
-.heart {
-    animation: beat 1.5s infinite;
-}
-
-@keyframes beat {
-    50% { transform: scale(1.12); }
-}
-
-#message {
-    margin-top: 15px;
+.message {
     font-size: 14px;
-    line-height: 1.5;
+    color: #c52d62;
+    overflow-wrap: anywhere;
 }
 
-.dashboard-card {
+/* DASHBOARD */
+
+#dashboard {
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+}
+
+.header {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.dashboard-content {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 25px;
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
     text-align: center;
 }
 
-.dashboard-card p {
-    margin: 20px 0;
-    line-height: 1.7;
+.chat-icon {
+    font-size: 65px;
+}
+
+/* CHATROOM */
+
+#chatroom {
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    background: #fff0f4;
+}
+
+.chat-header {
+    background: #c52d62;
+    color: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-header button {
+    width: auto;
+    margin: 0;
+    padding: 10px 15px;
+    background: white;
+    color: #c52d62;
+}
+
+.chat-title {
+    flex: 1;
+}
+
+.chat-title h3 {
+    font-size: 17px;
+}
+
+.chat-title small {
+    font-size: 12px;
+}
+
+#messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bubble {
+    max-width: 82%;
+    padding: 12px 15px;
+    border-radius: 17px;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.sent {
+    align-self: flex-end;
+    background: #c52d62;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.received {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 4px;
+}
+
+.time {
+    display: block;
+    font-size: 10px;
+    margin-top: 6px;
+    opacity: .75;
+}
+
+.sender {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.chat-input {
+    background: white;
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+.chat-input input {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-input button {
+    width: 75px;
+    margin: 0;
+}
+
+#chatStatus {
+    text-align: center;
+    padding: 6px;
+    font-size: 12px;
+    color: #c52d62;
 }
 </style>
 </head>
 
 <body>
 
-<!-- WELCOME SCREEN -->
+<!-- WELCOME -->
 
-<section id="welcome" class="screen active">
+<section id="welcome" class="screen center">
 <div class="card">
 
-<div class="logo heart">❤️</div>
-
+<div class="logo">❤️</div>
 <h1>JUST US</h1>
 
-<p class="subtitle">
+<p>
 Two hearts.<br>
 One private world.<br>
 A thousand beautiful memories.
 </p>
 
-<button class="primary" onclick="showScreen('login')">
+<button onclick="showScreen('login')">
 GET STARTED ❤️
 </button>
-
-<div class="footer">
-OUR LITTLE WORLD • EST. FOREVER
-</div>
 
 </div>
 </section>
 
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 
-<section id="login" class="screen">
+<section id="login" class="screen center">
 <div class="card">
 
 <div class="logo">🌹</div>
-
 <h2>Welcome Back</h2>
-
-<p class="description">
-Your little world is waiting for you.
-</p>
 
 <form onsubmit="loginUser(event)">
 
-<input
-type="email"
-id="loginEmail"
-placeholder="Email address"
-autocomplete="email"
-required>
+<input id="loginEmail" type="email"
+placeholder="Email address" required>
 
-<input
-type="password"
-id="loginPassword"
-placeholder="Password"
-autocomplete="current-password"
-required>
+<input id="loginPassword" type="password"
+placeholder="Password" required>
 
-<button class="primary" id="loginButton" type="submit">
+<button id="loginButton" type="submit">
 LOGIN ❤️
 </button>
 
 </form>
 
-<div id="loginMessage"></div>
+<div id="loginMessage" class="message"></div>
 
 <div class="switch">
-New to JUST US?
+New here?
 <span onclick="showScreen('register')">
 Create Account
 </span>
@@ -222,56 +329,36 @@ BACK
 </section>
 
 
-<!-- REGISTER SCREEN -->
+<!-- REGISTER -->
 
-<section id="register" class="screen">
+<section id="register" class="screen center">
 <div class="card">
 
 <div class="logo">💌</div>
-
 <h2>Join Our World</h2>
-
-<p class="description">
-Create your private account.
-</p>
 
 <form onsubmit="registerUser(event)">
 
-<input
-type="text"
-id="fullName"
-placeholder="Your name"
-autocomplete="name"
-required>
+<input id="fullName" placeholder="Your name" required>
 
-<input
-type="email"
-id="registerEmail"
-placeholder="Email address"
-autocomplete="email"
-required>
+<input id="registerEmail" type="email"
+placeholder="Email address" required>
 
-<input
-type="password"
-id="registerPassword"
-placeholder="Create password (minimum 6 characters)"
-autocomplete="new-password"
-minlength="6"
-required>
+<input id="registerPassword" type="password"
+placeholder="Password (minimum 6 characters)"
+minlength="6" required>
 
-<button class="primary" id="registerButton" type="submit">
+<button id="registerButton" type="submit">
 CREATE ACCOUNT ❤️
 </button>
 
 </form>
 
-<div id="registerMessage"></div>
+<div id="registerMessage" class="message"></div>
 
 <div class="switch">
-Already have an account?
-<span onclick="showScreen('login')">
-Login
-</span>
+Already registered?
+<span onclick="showScreen('login')">Login</span>
 </div>
 
 <button class="secondary" onclick="showScreen('welcome')">
@@ -285,27 +372,69 @@ BACK
 <!-- DASHBOARD -->
 
 <section id="dashboard" class="screen">
-<div class="card dashboard-card">
 
-<div class="logo">❤️</div>
+<div class="header">
+<h2>JUST US ❤️</h2>
+<p id="welcomeName"></p>
+</div>
 
-<h2>Welcome to JUST US</h2>
+<div class="dashboard-content">
 
-<p id="userName"></p>
+<div class="chat-icon">💬</div>
+
+<h2>Our Little World</h2>
 
 <p>
-Your account is connected successfully.
+Welcome to your private space.
+Your conversation is waiting.
 </p>
 
-<button class="primary" onclick="logoutUser()">
+<button onclick="openChat()">
+OPEN OUR CHAT 💬
+</button>
+
+<button class="secondary" onclick="logoutUser()">
 LOG OUT
 </button>
 
-<div class="footer">
-OUR LITTLE WORLD ❤️
 </div>
 
+</section>
+
+
+<!-- CHATROOM -->
+
+<section id="chatroom" class="screen">
+
+<div class="chat-header">
+
+<button onclick="backToDashboard()">←</button>
+
+<div class="chat-title">
+<h3>JUST US ❤️</h3>
+<small>Our private conversation</small>
 </div>
+
+<button onclick="logoutUser()">Logout</button>
+
+</div>
+
+<div id="chatStatus">Connecting to chat...</div>
+
+<div id="messages"></div>
+
+<form class="chat-input" onsubmit="sendMessage(event)">
+
+<input id="messageInput"
+placeholder="Write a message..."
+autocomplete="off"
+maxlength="2000"
+required>
+
+<button id="sendButton" type="submit">SEND</button>
+
+</form>
+
 </section>
 
 
@@ -323,79 +452,41 @@ const firebaseConfig = {
     measurementId: "G-Q1W7G8PMV4"
 };
 
-
-// INITIALIZE FIREBASE
-
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+// APPROVED ACCOUNTS
+
+const allowedUsers = [
+    "w1klxOLHSjS0E8EshFmCdj0udjg1",
+    "2qCvbZC7CdUrTklxwSLyj44priz1"
+];
+
+let currentUser = null;
+let unsubscribeMessages = null;
 
 
 // SCREEN NAVIGATION
 
-function showScreen(screenId) {
+function showScreen(id) {
 
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
 
-    document.getElementById(screenId).classList.add('active');
+    document.getElementById(id).classList.add('active');
 
 }
 
 
-// REGISTER ACCOUNT
-
-async function registerUser(event) {
-
-    event.preventDefault();
-
-    const name = document.getElementById("fullName").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const password = document.getElementById("registerPassword").value;
-
-    const button = document.getElementById("registerButton");
-    const message = document.getElementById("registerMessage");
-
-    button.disabled = true;
-    button.textContent = "CREATING ACCOUNT...";
-    message.textContent = "";
-
-    try {
-
-        const result = await auth.createUserWithEmailAndPassword(
-            email,
-            password
-        );
-
-        await result.user.updateProfile({
-            displayName: name
-        });
-
-        message.textContent = "Account created successfully! ❤️";
-
-    } catch (error) {
-
-        message.textContent = error.message;
-
-    } finally {
-
-        button.disabled = false;
-        button.textContent = "CREATE ACCOUNT ❤️";
-
-    }
-
-}
-
-
-// LOGIN ACCOUNT
+// LOGIN
 
 async function loginUser(event) {
 
     event.preventDefault();
-
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
 
     const button = document.getElementById("loginButton");
     const message = document.getElementById("loginMessage");
@@ -406,9 +497,12 @@ async function loginUser(event) {
 
     try {
 
-        await auth.signInWithEmailAndPassword(email, password);
+        await auth.signInWithEmailAndPassword(
+            document.getElementById("loginEmail").value.trim(),
+            document.getElementById("loginPassword").value
+        );
 
-    } catch (error) {
+    } catch(error) {
 
         message.textContent = error.message;
 
@@ -422,43 +516,251 @@ async function loginUser(event) {
 }
 
 
-// LOGOUT
+// REGISTER
 
-async function logoutUser() {
+async function registerUser(event) {
+
+    event.preventDefault();
+
+    const button = document.getElementById("registerButton");
+    const message = document.getElementById("registerMessage");
+
+    button.disabled = true;
+    button.textContent = "CREATING ACCOUNT...";
 
     try {
 
-        await auth.signOut();
+        const name = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("registerEmail").value.trim();
+        const password = document.getElementById("registerPassword").value;
 
-        showScreen("welcome");
+        await auth.createUserWithEmailAndPassword(email, password);
 
-    } catch (error) {
+        await auth.currentUser.updateProfile({
+            displayName: name
+        });
 
-        alert(error.message);
+        message.textContent = "Account created successfully!";
+
+    } catch(error) {
+
+        message.textContent = error.message;
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "CREATE ACCOUNT ❤️";
 
     }
 
 }
 
 
-// AUTOMATIC LOGIN CHECK
+// AUTOMATIC AUTHENTICATION CHECK
 
-auth.onAuthStateChanged(function(user) {
+auth.onAuthStateChanged(user => {
 
-    if (user) {
+    currentUser = user;
 
-        document.getElementById("userName").textContent =
-            "Hello, " + (user.displayName || user.email) + "!";
+    if (!user) {
 
-        showScreen("dashboard");
-
-    } else {
-
+        stopChatListener();
         showScreen("welcome");
+        return;
 
     }
 
+    if (!allowedUsers.includes(user.uid)) {
+
+        auth.signOut();
+        alert("This account is not authorized for JUST US.");
+
+        return;
+
+    }
+
+    document.getElementById("welcomeName").textContent =
+        "Welcome, " + (user.displayName || user.email);
+
+    showScreen("dashboard");
+
 });
+
+
+// OPEN CHAT
+
+function openChat() {
+
+    if (!currentUser) return;
+
+    showScreen("chatroom");
+
+    startChatListener();
+
+}
+
+
+// CHAT LISTENER
+
+function startChatListener() {
+
+    stopChatListener();
+
+    const status = document.getElementById("chatStatus");
+    const messages = document.getElementById("messages");
+
+    status.textContent = "Loading messages...";
+    messages.innerHTML = "";
+
+    unsubscribeMessages = db.collection("messages")
+        .orderBy("createdAt", "asc")
+        .onSnapshot(snapshot => {
+
+            messages.innerHTML = "";
+
+            if (snapshot.empty) {
+                status.textContent = "No messages yet. Say hello! ❤️";
+            } else {
+                status.textContent = "Connected ❤️";
+            }
+
+            snapshot.forEach(doc => {
+
+                const data = doc.data();
+
+                const bubble = document.createElement("div");
+
+                bubble.className = "bubble " +
+                    (data.senderId === currentUser.uid
+                    ? "sent" : "received");
+
+                const sender = document.createElement("span");
+                sender.className = "sender";
+                sender.textContent =
+                    data.senderId === currentUser.uid
+                    ? "You" : "JUST US";
+
+                const content = document.createElement("div");
+                content.textContent = data.text;
+
+                const time = document.createElement("span");
+                time.className = "time";
+
+                if (data.createdAt && data.createdAt.toDate) {
+                    time.textContent =
+                        data.createdAt.toDate().toLocaleString();
+                } else {
+                    time.textContent = "Sending...";
+                }
+
+                bubble.appendChild(sender);
+                bubble.appendChild(content);
+                bubble.appendChild(time);
+
+                messages.appendChild(bubble);
+
+            });
+
+            messages.scrollTop = messages.scrollHeight;
+
+        }, error => {
+
+            status.textContent = "Chat error: " + error.message;
+
+        });
+
+}
+
+
+// SEND MESSAGE
+
+async function sendMessage(event) {
+
+    event.preventDefault();
+
+    if (!currentUser) return;
+
+    const input = document.getElementById("messageInput");
+    const button = document.getElementById("sendButton");
+
+    const text = input.value.trim();
+
+    if (!text || text.length > 2000) return;
+
+    const receiverId = allowedUsers.find(
+        id => id !== currentUser.uid
+    );
+
+    button.disabled = true;
+
+    try {
+
+        await db.collection("messages").add({
+
+            senderId: currentUser.uid,
+            receiverId: receiverId,
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+        input.value = "";
+
+    } catch(error) {
+
+        alert("Message could not be sent: " + error.message);
+
+    } finally {
+
+        button.disabled = false;
+        input.focus();
+
+    }
+
+}
+
+
+// STOP CHAT LISTENER
+
+function stopChatListener() {
+
+    if (unsubscribeMessages) {
+
+        unsubscribeMessages();
+        unsubscribeMessages = null;
+
+    }
+
+}
+
+
+// BACK TO DASHBOARD
+
+function backToDashboard() {
+
+    stopChatListener();
+    showScreen("dashboard");
+
+}
+
+
+// LOGOUT
+
+async function logoutUser() {
+
+    stopChatListener();
+
+    try {
+
+        await auth.signOut();
+
+    } catch(error) {
+
+        alert(error.message);
+
+    }
+
+}
 
 </script>
 
